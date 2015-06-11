@@ -1,0 +1,101 @@
+\documentclass[paper=a4, twoside=false, fontsize=14pt, headings=normal]{article} % DIN-A4 Formatierung
+%-- Pakete --%
+\usepackage[ngerman]{babel} %Ausgabe von Titeln in Deutsch
+\usepackage[utf8]{inputenc} %Umlaute
+% Mathebibliotheken
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{esint}
+\usepackage{esvect}
+% bessere Schriftarten
+\usepackage{mathptmx, charter, courier}
+\usepackage[scaled]{helvet}
+\usepackage{lmodern}
+\renewcommand*\familydefault{\sfdefault}
+% Schriftverbesserung, microtype
+\usepackage{microtype}
+% farbige Schrift
+\usepackage{color, colortbl}
+\usepackage[table]{xcolor}
+\definecolor{lightgray}{gray}{0.9}
+% Bilder
+\usepackage{graphicx}
+% URLs
+\usepackage{hyperref}
+%-- Pagestyle --%
+% Zeilenabstand
+\usepackage{setspace}
+% Zeichenabstand
+\usepackage{xspace}
+%-- Tabellen --%
+\usepackage{spreadtab}
+\usepackage{numprint}
+\usepackage{eurosym}
+\usepackage{fp}
+% Seitenränder
+\usepackage[left=1.5cm,right=1.5cm,top=.5cm,bottom=.5cm]{geometry}
+% Keine Seitenzahlen usw.
+\pagestyle{empty}
+
+\begin{document}
+
+% Formatierung
+\onehalfspacing
+\begin{center}
+
+% Um Logo in Zeile vertikal zu zentrieren
+\raisebox{-.25\height}{\includegraphics[width=0.3\textwidth]{logo}} \huge \textbf{Getränkestrichliste}
+
+% Formatierung - normale Schrift
+\vfill
+\large
+
+% Optionen
+\renewcommand\STprintnum[1]{\FPifneg{#1}\color{red}\fi\numprint{#1}}
+\npdecimalsign{,}
+\npthousandsep{.}
+
+
+% hline-Dicke und Zellenfarbe
+\setlength{\arrayrulewidth}{.09em}
+
+% Getränkeliste
+\rowcolors{1}{}{lightgray}
+\begin{spreadtab}{{tabular}{|l|r|p{3.2cm}|p{3.2cm}|p{3.2cm}|c|}}
+\hline
+@\textbf{Name} 		&@\textbf{Guthaben}  									&@\textbf{\EUR{0,50}}	&@\textbf{\EUR{0,70}} 	&@\textbf{\EUR{0,80}} 	&@\textbf{Score} 			\\
+\hline
+%
+@ John Doe 	& \nprounddigits{2} :={23 - 0.5*[1,0] - 0.7*[2,0] - 0.8*[3,0]} \EUR{} \npnoround 	&~\color{gray}:={5}~	&~\color{gray}:={11}~	&~\color{gray}:={1}~	&[-3,0] + [-2,0] + [-1,0] 	\\\hline
+@ Jane Doe 	& \nprounddigits{2} :={5 - 0.5*[1,0] - 0.7*[2,0] - 0.8*[3,0]} \EUR{} \npnoround 	&~\color{gray}:={15}~	&~\color{gray}:={11}~	&~\color{gray}:={1}~	&[-3,0] + [-2,0] + [-1,0] 	\\\hline
+% HIER NEUE EINFÜGEN
+%
+\hline
+@ $\sum$ 			&  :={sum(b2:[0,-1])} \EUR{}	 						& sum(c2:[0,-1]) 		& sum(d2:[0,-1]) 		& sum(e2:[0,-1])  				&[-3,0] + [-2,0] + [-1,0]	\\
+\hline
+\end{spreadtab}
+
+\vfill
+
+% Preistabelle
+\rowcolors{1}{}{}
+\Large
+\begin{tabular}{|l|r|}
+	\hline
+	\textbf{Preise} & \\ \hline
+	\textbf{Wasser, Spezi, Orangenlimonade, Radler, Loschi Cola, Zitronenlimo} & \textbf{\EUR{0,50}} \\ \hline
+	\textbf{Apfelschorle, ACE, Mate} & \textbf{\EUR{0,70}} \\ \hline
+	\textbf{Bier} & \textbf{\EUR{0,80}} \\ \hline
+\end{tabular}
+
+\vfill
+
+% Notizen
+\normalsize
+\textcolor{red}{Liste nur für Aktive!} Zum Aufladen, bezahlt in die \textbf{rote Kasse} und tragt es in der Spalte "'\textbf{Guthaben}"' ein. Bei Fragen bitte an Christopher - \texttt{christopher.sauer@fau.de} wenden. Mir ist die Zahlendarstellung bewusst!
+
+\textbf{Stand: \today}
+\end{center}
+
+\end{document}
