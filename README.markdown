@@ -1,7 +1,7 @@
 # Repository für die FabLab Getränkeliste
 
 ## Anleitung
-1. das ```runme.py`` ausführen
+1. das ```runme.py``` ausführen
 2. diff überprüfen
 3. PDF drucken und umhängen
 4. Spaß haben
