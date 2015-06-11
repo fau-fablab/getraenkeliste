@@ -12,7 +12,6 @@ lines = codecs.open(filename, 'r', encoding='utf-8').readlines()
 outname = "auto_getraenkeliste.tex"
 outFile = codecs.open(outname, 'w+', encoding='utf-8')
 
-
 # Terminalausgabe
 print "Bearbeitung"
 for i in range(len(lines)):
@@ -64,7 +63,6 @@ for i in range(len(lines)):
     else:
         outFile.write(lines[i])
 
-
 # Datei speichern
 outFile.close()
 
@@ -74,4 +72,5 @@ os.system("echo ======================================================")
 os.system("echo DIFF")
 os.system("echo ======================================================")
 os.system("diff -u " + filename + " " + outname)
-os.system("open " + outname[0:-4] + ".pdf")
+# nur für OS X 
+#os.system("open " + outname[0:-4] + ".pdf")
