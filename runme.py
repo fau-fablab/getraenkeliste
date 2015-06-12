@@ -20,16 +20,60 @@ lines = codecs.open(filename, 'r', encoding='utf-8').readlines()
 outname = "auto_getraenkeliste.tex"
 outFile = codecs.open(outname, 'w+', encoding='utf-8')
 
+def colorize(color, message):
+    """
+    Adds ANSI colors to the message
+    :type color: str
+    :type message: str
+    :param color: Colors to add to the message
+    :param message: Message which should be displayed colored
+    :return: the colored message
+    """
+    return "%s%s%s" % (color, message, Colors.RESET)
+
+
+class Colors:
+    """
+    chosen ANSI colors
+    """
+    RESET = '\033[0m'
+    BOLD = '\033[1m'
+    ITALIC = '\033[3m'
+    UNDERLINE = '\033[4m'
+    # normal colors have code \033[3x bold colors have code \033[9x and back colors have \033[4x or \033[10x
+    RED = '\033[31m'
+    GREEN = '\033[32m'
+    YELLOW = '\033[33m'
+    BLUE = '\033[34m'
+    MAGENTA = '\033[35m'
+    CYAN = '\033[36m'
+    WHITE = '\033[37m'
+
+def int_input(promt, default):
+    input_text = ""
+    while True:
+        try:
+            input_text = str(input("{promt} [{default}] ".format(promt=promt, default=default)))
+            if len(input_text) == 0:
+                return default
+            else:
+                return int(input_text)
+        except ValueError:
+            print(colorize(Colors.RED, "You must enter a number. Try again."))
+            continue
+
 # Terminalausgabe
-print("Bearbeitung")
+(width, height) = os.get_terminal_size()
+seperator = "=" * width
+print(seperator)
+print(colorize(Colors.BOLD + Colors.WHITE, "Bearbeitung"))
+print(seperator)
 for line in lines:
     if ":={" in line:
         if "sum" not in line:
             lineTester = line
-            print(lineTester[2:lineTester.index("&")])
-            einzahlung = input("Einzahlung: ")
-            if len(einzahlung) == 0:
-                einzahlung = 0
+            print(colorize(Colors.UNDERLINE, lineTester[2:lineTester.index("&")].strip()))  # Name
+            einzahlung = int_input(colorize(Colors.GREEN, "Einzahlung:"), 0)
             # Magie
             for j in range(4):
                 # Einzahlung
@@ -47,15 +91,13 @@ for line in lines:
                 else:
                     # abfragen für 50ct, 70ct und 80ct
                     if j == 1:
-                        anzahl = input("#50ct: ")
+                        anzahl = int_input(colorize(Colors.BLUE, "#50ct:"), 0)
                     elif j == 2:
-                        anzahl = input("#70ct: ")
+                        anzahl = int_input(colorize(Colors.CYAN, "#70ct:"), 0)
                     elif j == 3:
-                        anzahl = input("#80ct: ")
-                    if len(anzahl) == 0:
-                        anzahl = 0
+                        anzahl = int_input(colorize(Colors.MAGENTA, "#80ct:"), 0)
                     begin = lineTester.index(":={") + len(":={")
-                    outFile.write(lineTester[end:begin])
+                    outFile.write(lineTester[end:begin])  # TODO: end can be undefined
                     lineTester = lineTester[begin:]
                     end = lineTester.index("}")
                     # print lineTester[:end]
@@ -74,11 +116,14 @@ for line in lines:
 # Datei speichern
 outFile.close()
 
+print(seperator)
+print(colorize(Colors.BOLD, "Work, work..."))
+print(seperator)
 # Kompilierem mit latexmk
 os.system("latexmk -pdf {file} --quiet && latexmk -c --quiet".format(file=outname))
-print("======================================================")
-print("DIFF")
-print("======================================================")
+print(seperator)
+print(colorize(Colors.BOLD, "DIFF"))
+print(seperator)
 os.system("diff -u {file1} {file2}".format(file1=filename, file2=outname))
 # nur für OS X
 # os.system("open " + outname[0:-4] + ".pdf")
