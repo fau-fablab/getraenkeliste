@@ -1,4 +1,5 @@
 .DS_Store
+auto*
 *.aux
 *.fdb_latexmk
 *.fls
