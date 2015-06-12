@@ -21,11 +21,11 @@ outname = "auto_getraenkeliste.tex"
 outFile = codecs.open(outname, 'w+', encoding='utf-8')
 
 # Terminalausgabe
-for i in range(len(lines)):
-    if ":={" in lines[i]:
-        if not "sum" in lines[i]:
-            lineTester = lines[i]
-            print("Bearbeitung")
+print("Bearbeitung")
+for line in lines:
+    if ":={" in line:
+        if "sum" not in line:
+            lineTester = line
             print(lineTester[2:lineTester.index("&")])
             einzahlung = input("Einzahlung: ")
             if len(einzahlung) == 0:
@@ -42,8 +42,8 @@ for i in range(len(lines)):
                     neuEingezahlt = int(float(lineTester[:end - 1])) + int(einzahlung)
                     outFile.write(str(neuEingezahlt))
                     outFile.write(lineTester[len(str(neuEingezahlt)):end])
-                # neue Getränke
                     # print neuEingezahlt
+                # neue Getraenke
                 else:
                     # abfragen für 50ct, 70ct und 80ct
                     if j == 1:
@@ -67,18 +67,18 @@ for i in range(len(lines)):
                         outFile.write(lineTester[len(str(neuAnzahl)):] + "\n")
         # trotzdem reinschreiebn
         else:
-            outFile.write(lines[i])
+            outFile.write(line)
     else:
-        outFile.write(lines[i])
+        outFile.write(line)
 
 # Datei speichern
 outFile.close()
 
 # Kompilierem mit latexmk
-os.system("latexmk -pdf " + outname + " && latexmk -c")
-os.system("echo ======================================================")
-os.system("echo DIFF")
-os.system("echo ======================================================")
-os.system("diff -u " + filename + " " + outname)
-# nur für OS X 
-#os.system("open " + outname[0:-4] + ".pdf")
+os.system("latexmk -pdf {file} --quiet && latexmk -c --quiet".format(file=outname))
+print("======================================================")
+print("DIFF")
+print("======================================================")
+os.system("diff -u {file1} {file2}".format(file1=filename, file2=outname))
+# nur für OS X
+# os.system("open " + outname[0:-4] + ".pdf")
