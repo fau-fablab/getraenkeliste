@@ -1,5 +1,13 @@
-# by Christopher Sauer, 2015
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+"""
+Skript für die FabLab Getränkeliste
+"""
+
+__author__ = 'Christopher Sauer, 2015'
+__license__ = 'CC BY-SA 3.0'
+
 # import-Anweisungen
 import os
 import codecs
@@ -13,13 +21,13 @@ outname = "auto_getraenkeliste.tex"
 outFile = codecs.open(outname, 'w+', encoding='utf-8')
 
 # Terminalausgabe
-print "Bearbeitung"
 for i in range(len(lines)):
     if ":={" in lines[i]:
         if not "sum" in lines[i]:
             lineTester = lines[i]
-            print lineTester[2:lineTester.index("&")]
-            einzahlung = raw_input("Einzahlung: ")
+            print("Bearbeitung")
+            print(lineTester[2:lineTester.index("&")])
+            einzahlung = input("Einzahlung: ")
             if len(einzahlung) == 0:
                 einzahlung = 0
             # Magie
@@ -30,32 +38,32 @@ for i in range(len(lines)):
                     outFile.write(lineTester[0:begin])
                     lineTester = lineTester[begin:-1]
                     end = lineTester.index("-")
-                    #print lineTester[:end]
-                    neuEingezahlt = int(float(lineTester[:end-1])) + int(einzahlung)
+                    # print lineTester[:end]
+                    neuEingezahlt = int(float(lineTester[:end - 1])) + int(einzahlung)
                     outFile.write(str(neuEingezahlt))
                     outFile.write(lineTester[len(str(neuEingezahlt)):end])
-                    #print neuEingezahlt
                 # neue Getränke
+                    # print neuEingezahlt
                 else:
                     # abfragen für 50ct, 70ct und 80ct
                     if j == 1:
-                        anzahl = raw_input("#50ct: ")
+                        anzahl = input("#50ct: ")
                     elif j == 2:
-                        anzahl = raw_input("#70ct: ")
+                        anzahl = input("#70ct: ")
                     elif j == 3:
-                        anzahl = raw_input("#80ct: ")
+                        anzahl = input("#80ct: ")
                     if len(anzahl) == 0:
                         anzahl = 0
                     begin = lineTester.index(":={") + len(":={")
                     outFile.write(lineTester[end:begin])
                     lineTester = lineTester[begin:]
                     end = lineTester.index("}")
-                    #print lineTester[:end]
+                    # print lineTester[:end]
                     neuAnzahl = int(lineTester[:end]) + int(anzahl)
                     outFile.write(str(neuAnzahl))
                     outFile.write(lineTester[len(str(neuAnzahl)):end])
                     if j == 3:
-                        #print lineTester[len(str(neuAnzahl)):]
+                        # print lineTester[len(str(neuAnzahl)):]
                         outFile.write(lineTester[len(str(neuAnzahl)):] + "\n")
         # trotzdem reinschreiebn
         else:
