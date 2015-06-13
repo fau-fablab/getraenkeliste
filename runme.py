@@ -11,7 +11,10 @@ __license__ = 'CC BY-SA 3.0'
 # import-Anweisungen
 import os
 import codecs
-import unicodedata
+import unicodedata  # TODO: unused?
+import sys
+if sys.version_info < (3, 4):
+    input = raw_input
 
 # Input
 filename = str("getraenkeliste.tex")
@@ -50,6 +53,10 @@ class Colors:
     WHITE = '\033[37m'
 
 def int_input(promt, default):
+    """
+    Fetches an int value from stdin.
+    If no input was made, default will be returned
+    """
     input_text = ""
     while True:
         try:
@@ -63,11 +70,11 @@ def int_input(promt, default):
             continue
 
 # Terminalausgabe
-(width, height) = os.get_terminal_size()
-seperator = "=" * width
-print(seperator)
+HEIGHT, WIDTH = os.popen('stty size', 'r').read().split()
+SEPERATOR = "=" * int(WIDTH)
+print(SEPERATOR)
 print(colorize(Colors.BOLD + Colors.WHITE, "Bearbeitung"))
-print(seperator)
+print(SEPERATOR)
 for line in lines:
     if ":={" in line:
         if "sum" not in line:
@@ -116,14 +123,14 @@ for line in lines:
 # Datei speichern
 outFile.close()
 
-print(seperator)
+print(SEPERATOR)
 print(colorize(Colors.BOLD, "Work, work..."))
-print(seperator)
+print(SEPERATOR)
 # Kompilierem mit latexmk
 os.system("latexmk -pdf {file} --quiet && latexmk -c --quiet".format(file=outname))
-print(seperator)
+print(SEPERATOR)
 print(colorize(Colors.BOLD, "DIFF"))
-print(seperator)
+print(SEPERATOR)
 os.system("diff -u {file1} {file2}".format(file1=filename, file2=outname))
 # nur für OS X
 # os.system("open " + outname[0:-4] + ".pdf")
