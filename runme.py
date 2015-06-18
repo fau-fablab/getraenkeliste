@@ -13,6 +13,8 @@ import os
 import codecs
 import unicodedata  # TODO: unused?
 import sys
+import signal #  Fenstergroessenaenderung behandeln
+
 if sys.version_info < (3, 4):
     input = raw_input
 
@@ -70,8 +72,16 @@ def int_input(promt, default):
             continue
 
 # Terminalausgabe
-HEIGHT, WIDTH = os.popen('stty size', 'r').read().split()
-SEPERATOR = "=" * int(WIDTH)
+
+def getsep(*egal):
+    global WIDTH, HEIGHT, SEPERATOR
+    HEIGHT, WIDTH = os.popen('stty size', 'r').read().split()
+    SEPERATOR = "=" * int(WIDTH)
+
+signal.signal(signal.SIGWINCH, getsep)
+
+getsep()
+
 print(SEPERATOR)
 print(colorize(Colors.BOLD + Colors.WHITE, "Bearbeitung"))
 print(SEPERATOR)
