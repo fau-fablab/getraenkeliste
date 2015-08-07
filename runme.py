@@ -54,9 +54,17 @@ class Colors:
     CYAN = '\033[36m'
     WHITE = '\033[37m'
 
-def int_input(promt, default):
+def more_decimals_than(number, allowed_decimals_cnt):
     """
-    Fetches an int value from stdin.
+    returns true if the count of decimals (numbers after the dot) is more than decimals
+    """
+    decimals = str(round(number-int(number), allowed_decimals_cnt+1))[2:] # e.g. 5.67 - 5 = 0.67 -> '67' (round: because float is bitter)
+    cnt = 0 if decimals == '0' else len(decimals)
+    return False if cnt < 0 else cnt > allowed_decimals_cnt
+
+def float_input(promt, default, decimals=0):
+    """
+    Fetches an float value from stdin.
     If no input was made, default will be returned
     """
     input_text = ""
@@ -65,8 +73,12 @@ def int_input(promt, default):
             input_text = str(input("{promt} [{default}] ".format(promt=promt, default=default)))
             if len(input_text) == 0:
                 return default
+            elif more_decimals_than(float(input_text), decimals):
+                print(more_decimals_than(float(input_text), decimals))
+                print(colorize(Colors.RED, "You must enter a number with at most %d decimals"%decimals))
+                continue
             else:
-                return int(input_text)
+                return float(input_text)
         except ValueError:
             print(colorize(Colors.RED, "You must enter a number. Try again."))
             continue
@@ -90,7 +102,7 @@ for line in lines:
         if "sum" not in line:
             lineTester = line
             print(colorize(Colors.UNDERLINE, lineTester[2:lineTester.index("&")].strip()))  # Name
-            einzahlung = int_input(colorize(Colors.GREEN, "Einzahlung:"), 0)
+            einzahlung = float_input(colorize(Colors.GREEN, "Einzahlung:"), 0.0, 2)
             # Magie
             for j in range(4):
                 # Einzahlung
@@ -108,11 +120,11 @@ for line in lines:
                 else:
                     # abfragen für 50ct, 70ct und 80ct
                     if j == 1:
-                        anzahl = int_input(colorize(Colors.BLUE, "#50ct:"), 0)
+                        anzahl = int(float_input(colorize(Colors.BLUE, "#50ct:"), 0))
                     elif j == 2:
-                        anzahl = int_input(colorize(Colors.CYAN, "#70ct:"), 0)
+                        anzahl = int(float_input(colorize(Colors.CYAN, "#70ct:"), 0))
                     elif j == 3:
-                        anzahl = int_input(colorize(Colors.MAGENTA, "#80ct:"), 0)
+                        anzahl = int(float_input(colorize(Colors.MAGENTA, "#80ct:"), 0))
                     begin = lineTester.index(":={") + len(":={")
                     outFile.write(lineTester[end:begin])  # TODO: end can be undefined
                     lineTester = lineTester[begin:]
