@@ -112,7 +112,7 @@ for line in lines:
                     lineTester = lineTester[begin:-1]
                     end = lineTester.index("-")
                     # print lineTester[:end]
-                    neuEingezahlt = int(float(lineTester[:end - 1])) + int(einzahlung)
+                    neuEingezahlt = float(lineTester[:end - 1]) + einzahlung
                     outFile.write(str(neuEingezahlt))
                     outFile.write(lineTester[len(str(neuEingezahlt)):end])
                     # print neuEingezahlt
