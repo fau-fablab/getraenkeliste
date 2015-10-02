@@ -8,7 +8,6 @@ Skript für die FabLab Getränkeliste
 # import-Anweisungen
 import os
 import codecs
-import unicodedata  # TODO: unused?
 import sys
 import signal  # Fenstergroessenaenderung behandeln
 
@@ -16,7 +15,9 @@ __author__ = 'Christopher Sauer, 2015'
 __license__ = 'CC BY-SA 3.0'
 
 if sys.version_info < (3, 4):
-    input = raw_input
+    safe_input = raw_input
+elif sys.version_info >= (3, 4):
+    safe_input = input
 
 # Input
 filename = str("getraenkeliste.tex")
@@ -38,7 +39,7 @@ def colorize(color, message):
     return "%s%s%s" % (color, message, Colors.RESET)
 
 
-class Colors:
+class Colors(object):
     """
     chosen ANSI colors
     """
@@ -75,8 +76,8 @@ def float_input(promt, default, decimals=0):
     input_text = ""
     while True:
         try:
-            input_text = str(input("{promt} [{default}] ".
-                                   format(promt=promt, default=default)))
+            input_text = str(safe_input("{promt} [{default}] ".
+                                        format(promt=promt, default=default)))
             if len(input_text) == 0:
                 return default
             elif more_decimals_than(float(input_text), decimals):
