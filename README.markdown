@@ -1,4 +1,4 @@
-# Repository für die FabLab Getränkeliste
+# Repository für eine Getränkeliste
 
 [![Code Health](https://landscape.io/github/fau-fablab/getraenkeliste/master/landscape.svg?style=flat)](https://landscape.io/github/fau-fablab/getraenkeliste/master)
 

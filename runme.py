@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Skript für die FabLab Getränkeliste
+Skript für eine Getränkeliste
 """
 
 # import-Anweisungen
