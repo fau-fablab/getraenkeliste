@@ -1,5 +1,7 @@
 # Repository für die FabLab Getränkeliste
 
+[![Code Health](https://landscape.io/github/fau-fablab/getraenkeliste/master/landscape.svg?style=flat)](https://landscape.io/github/fau-fablab/getraenkeliste/master)
+
 ## Anleitung
 1. das ```runme.py``` ausführen
 2. diff überprüfen

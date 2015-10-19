@@ -5,18 +5,19 @@
 Skript für die FabLab Getränkeliste
 """
 
-__author__ = 'Christopher Sauer, 2015'
-__license__ = 'CC BY-SA 3.0'
-
 # import-Anweisungen
 import os
 import codecs
-import unicodedata  # TODO: unused?
 import sys
-import signal #  Fenstergroessenaenderung behandeln
+import signal  # Fenstergroessenaenderung behandeln
+
+__author__ = 'Christopher Sauer, 2015'
+__license__ = 'CC BY-SA 3.0'
 
 if sys.version_info < (3, 4):
-    input = raw_input
+    safe_input = raw_input
+elif sys.version_info >= (3, 4):
+    safe_input = input
 
 # Input
 filename = str("getraenkeliste.tex")
@@ -24,6 +25,7 @@ lines = codecs.open(filename, 'r', encoding='utf-8').readlines()
 # Output
 outname = "auto_getraenkeliste.tex"
 outFile = codecs.open(outname, 'w+', encoding='utf-8')
+
 
 def colorize(color, message):
     """
@@ -37,7 +39,7 @@ def colorize(color, message):
     return "%s%s%s" % (color, message, Colors.RESET)
 
 
-class Colors:
+class Colors(object):
     """
     chosen ANSI colors
     """
@@ -45,7 +47,8 @@ class Colors:
     BOLD = '\033[1m'
     ITALIC = '\033[3m'
     UNDERLINE = '\033[4m'
-    # normal colors have code \033[3x bold colors have code \033[9x and back colors have \033[4x or \033[10x
+    # normal colors have code \033[3x bold colors have code \033[9x
+    # and back colors have \033[4x or \033[10x
     RED = '\033[31m'
     GREEN = '\033[32m'
     YELLOW = '\033[33m'
@@ -54,13 +57,16 @@ class Colors:
     CYAN = '\033[36m'
     WHITE = '\033[37m'
 
+
 def more_decimals_than(number, allowed_decimals_cnt):
     """
     returns true if the count of decimals (numbers after the dot) is more than decimals
     """
-    decimals = str(round(number-int(number), allowed_decimals_cnt+1))[2:] # e.g. 5.67 - 5 = 0.67 -> '67' (round: because float is bitter)
+    # e.g. 5.67 - 5 = 0.67 -> '67' (round: because float is bitter)
+    decimals = str(round(number-int(number), allowed_decimals_cnt+1))[2:]
     cnt = 0 if decimals == '0' else len(decimals)
     return False if cnt < 0 else cnt > allowed_decimals_cnt
+
 
 def float_input(promt, default, decimals=0):
     """
@@ -70,12 +76,14 @@ def float_input(promt, default, decimals=0):
     input_text = ""
     while True:
         try:
-            input_text = str(input("{promt} [{default}] ".format(promt=promt, default=default)))
+            input_text = str(safe_input("{promt} [{default}] ".
+                                        format(promt=promt, default=default)))
             if len(input_text) == 0:
                 return default
             elif more_decimals_than(float(input_text), decimals):
                 print(more_decimals_than(float(input_text), decimals))
-                print(colorize(Colors.RED, "You must enter a number with at most %d decimals"%decimals))
+                print(colorize(Colors.RED,
+                               "You must enter a number with at most %d decimals" % decimals))
                 continue
             else:
                 return float(input_text)
@@ -83,9 +91,11 @@ def float_input(promt, default, decimals=0):
             print(colorize(Colors.RED, "You must enter a number. Try again."))
             continue
 
-# Terminalausgabe
 
 def getsep(*egal):
+    """
+    Terminalausgabe
+    """
     global WIDTH, HEIGHT, SEPERATOR
     HEIGHT, WIDTH = os.popen('stty size', 'r').read().split()
     SEPERATOR = "=" * int(WIDTH)
